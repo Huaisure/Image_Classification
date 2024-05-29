@@ -25,7 +25,6 @@ class BottleBlock(nn.Module):
         x = self.batch_norm3(self.conv3(x))
         x += identity
         x = self.relu(x)
-
         return x
     
 class ResNet(nn.Module):
