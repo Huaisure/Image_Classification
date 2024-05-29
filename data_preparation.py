@@ -25,8 +25,7 @@ class CustomDataset(Dataset):
 
         return image,label
 
-def get_data_loader(type:str, batch_size=32):
-    base_dir = os.path.dirname(os.path.abspath(__file__))
+def get_data_loader(base_dir,type:str, batch_size=32):
     data_dir = os.path.join(base_dir, 'data')
 
     # 训练集数据增强
