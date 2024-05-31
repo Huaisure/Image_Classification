@@ -49,33 +49,34 @@ def train_model(model, criterion, optimizer, scheduler, device, num_epochs=25):
                         loss.backward()
                         optimizer.step()
 
-                    running_loss += loss.item() * inputs.size(0)
-                    running_corrects += torch.sum(preds == labels.data)
+                running_loss += loss.item() * inputs.size(0)
+                running_corrects += torch.sum(preds == labels.data)
 
-                if phase == "train":
-                    scheduler.step()
+            if phase == "train":
+                scheduler.step()
 
-                epoch_loss = running_loss / len(data_loader.dataset)
-                epoch_acc = running_corrects.double() / len(data_loader.dataset)
+            epoch_loss = running_loss / len(data_loader.dataset)
+            epoch_acc = running_corrects.double() / len(data_loader.dataset)
 
-                print(
-                    "{} Loss: {:.4f} Acc: {:.4f}".format(phase, epoch_loss, epoch_acc)
-                )
-
-                if phase == "val" and epoch_acc > best_acc:
-                    best_acc = epoch_acc
-                    best_model_wts = copy.deepcopy(model.state_dict())
-
-        time_elapsed = time.time() - since
-        print(
-            "Training complete in {:.0f}m {:.0f}s".format(
-                time_elapsed // 60, time_elapsed % 60
+            print(
+                "{} Loss: {:.4f} Acc: {:.4f}".format(phase, epoch_loss, epoch_acc)
             )
-        )
-        print("Best val Acc: {:4f}".format(best_acc))
 
-        model.load_state_dict(best_model_wts)
-        return model
+            if phase == "val" and epoch_acc > best_acc:
+                best_acc = epoch_acc
+                best_model_wts = copy.deepcopy(model.state_dict())
+        print()
+
+    time_elapsed = time.time() - since
+    print(
+        "Training complete in {:.0f}m {:.0f}s".format(
+            time_elapsed // 60, time_elapsed % 60
+        )
+    )
+    print("Best val Acc: {:4f}".format(best_acc))
+
+    model.load_state_dict(best_model_wts)
+    return model
 
 
 if __name__ == "__main__":
