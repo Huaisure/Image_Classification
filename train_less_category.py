@@ -36,6 +36,7 @@ def train_model(
     device,
     train_loader,
     val_loader,
+    filter_classes=[],
     num_epochs=25,
 ):
     best_model_wts = copy.deepcopy(model.state_dict())
@@ -43,7 +44,7 @@ def train_model(
     since = time.time()
 
     # 过滤掉某几类样本，样本类别为0-5
-    filter_classes = [0, 1]
+    # filter_classes = [0, 1]
     train_loader = filter_data_loader(train_loader, filter_classes)
 
     for epoch in range(num_epochs):
@@ -116,6 +117,9 @@ if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.abspath(__file__))
     train_loader, val_loader = get_data_loader(base_dir=base_dir, type="train")
 
+    # 过滤掉某几类样本，样本类别为0-5
+    filter_classes = [0, 1]
+
     model = train_model(
         model,
         criterion,
@@ -124,6 +128,7 @@ if __name__ == "__main__":
         device,
         train_loader,
         val_loader,
+        filter_classes,
         num_epochs=25,
     )
     torch.save(model.state_dict(), "model_{}.pth".format(time.strftime("%Y%m%d%H%M%S")))

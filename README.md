@@ -18,3 +18,8 @@
     需要输入对应的图片序号
 
 
+- 需要删除某几类时进行训练
+    ```bash
+    python train_less_category.py
+    ```
+    请在 `train_less_category.py` 中修改对应要删除的序号
