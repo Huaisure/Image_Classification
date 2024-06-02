@@ -1,14 +1,31 @@
+"""
+去除某几类样本，重新训练模型，观察模型的表现
+在 train.py 的基础上做改动
+"""
+
 from model import ResNet50
 from data_preparation import get_data_loader
 
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from torch.utils.data import DataLoader
 from torch.optim import lr_scheduler
 import time
 import copy
 import os
 from tqdm import tqdm
+
+
+def filter_data_loader(data_loader, filter_classes):
+    filtered_data = [data for data in data_loader if data[1] not in filter_classes]
+    filtered_loader = DataLoader(
+        filtered_data,
+        batch_size=data_loader.batch_size,
+        shuffle=True,
+        num_workers=data_loader.num_workers,
+    )
+    return filtered_loader
 
 
 def train_model(
@@ -24,6 +41,10 @@ def train_model(
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
     since = time.time()
+
+    # 过滤掉某几类样本，样本类别为0-5
+    filter_classes = [0, 1]
+    train_loader = filter_data_loader(train_loader, filter_classes)
 
     for epoch in range(num_epochs):
         print("Epoch {}/{}".format(epoch, num_epochs - 1))

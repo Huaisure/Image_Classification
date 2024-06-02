@@ -1,3 +1,6 @@
 *.pdf
 *.pth
 __pycache__
+*.zip
+report.md
+*.png
